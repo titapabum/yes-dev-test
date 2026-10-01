@@ -1,50 +1,82 @@
 @{
     ViewData["Title"] = "Admin Login - Luma Skin";
-    Layout = "null";
+    Layout = "_Layout"; 
 }
 
-<div class="container mt-5">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --luma-purple: #5c3d63;
+        --luma-light-purple: #f5f0f7;
+    }
+
+    body {
+        font-family: 'Prompt', sans-serif !important;
+        background-color: #f8f9fa;
+    }
+
+    .card-login {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 25px rgba(92, 61, 99, 0.08);
+    }
+
+    .btn-luma {
+        background-color: var(--luma-purple);
+        color: #ffffff;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-luma:hover {
+        background-color: #4a304f;
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(92, 61, 99, 0.2);
+    }
+
+    .form-control:focus {
+        border-color: var(--luma-purple);
+        box-shadow: 0 0 0 0.25rem rgba(92, 61, 99, 0.15);
+    }
+</style>
+
+<div class="container py-5 mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow-sm border-0 rounded-3">
-                <div class="card-body p-4">
-                    <!-- หัวข้อแบรนด์ -->
-                    <div class="text-center mb-4">
-                        <h2 class="fw-bold text-dark">Luma Skin</h2>
-                        <p class="text-muted">ระบบจัดการหลังบ้านสำหรับผู้ดูแลระบบ</p>
+        <div class="col-md-4">
+            <div class="card card-login p-4 bg-white">
+                <div class="text-center mb-4 pt-2">
+                    <h3 class="fw-bold m-0" style="color: var(--luma-purple); letter-spacing: 1.5px;">LUMA SKIN</h3>
+                    <p class="text-muted small mt-1">Admin Control</p>
+                </div>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger rounded-3 py-2 small text-center" role="alert">
+                        <i class="bi bi-exclamation-circle me-1"></i> @ViewBag.Error
+                    </div>
+                }
+
+                <form asp-controller="Admin" asp-action="Login" method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-secondary">ชื่อผู้ใช้งาน (Username)</label>
+                        <input type="text" class="form-control rounded-3 py-2.5" name="username" value="admin" required />
                     </div>
 
-                    <!-- แสดงข้อความแจ้งเตือน Error หาก Login ไม่ผ่าน -->
-                    @if (!ViewData.ModelState.IsValid)
-                    {
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <div asp-validation-summary="All" class="mb-0 text-danger small"></div>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    }
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small text-secondary">รหัสผ่าน (Password)</label>
+                        <input type="password" class="form-control rounded-3 py-2.5" name="password" value="12345" required />
+                    </div>
 
-                    <!-- ฟอร์มเข้าสู่ระบบ -->
-                    <form asp-controller="Admin" asp-action="Login" method="post">
-                        <div class="mb-3">
-                            <label for="email" class="form-label fw-semibold">อีเมล (Email)</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="admin@lumaskin.com" required />
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="password" class="form-label fw-semibold">รหัสผ่าน (Password)</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required />
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-dark py-2 fw-bold">เข้าสู่ระบบ</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-luma py-2.5 fw-bold shadow-sm">เข้าสู่ระบบ</button>
+                    </div>
+                </form>
             </div>
             
-            <!-- หมายเหตุตามโจทย์: ไม่มีหน้าสมัครสมาชิก -->
             <div class="text-center mt-3">
-                <small class="text-muted">ระบบนี้เฉพาะเจ้าหน้าที่ภายในเท่านั้น ไม่มีบริการสมัครสมาชิกภายนอก</small>
+                <small class="text-muted">Luma Skin Inventory Management System</small>
             </div>
         </div>
     </div>
