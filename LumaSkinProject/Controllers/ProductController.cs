@@ -1,4 +1,6 @@
 using CsvHelper;
+using QRCoder;
+using System.Drawing;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -120,6 +122,71 @@ namespace LumaSkinProject.Controllers
 
             TempData["SuccessMessage"] = $"นำเข้าไฟล์ CSV สำเร็จ: เพิ่มสินค้าใหม่ {successCount} รายการ, อัปเดตข้อมูลเดิม {updateCount} รายการ";
             return RedirectToAction("Index", "Admin");
+        }
+    }
+
+    namespace LumaSkinProject.Controllers
+    {
+        public class ProductController : Controller
+        {
+            private readonly ApplicationDbContext _context;
+
+            public ProductController(ApplicationDbContext context)
+            {
+                _context = context;
+            }
+
+            // 1. ฟังก์ชันสร้างและแสดงรูปภาพ QR Code สำหรับสินค้าแต่ละชิ้น (เรียกใช้ผ่าน ID หรือ SKU)
+            [HttpGet]
+            public IActionResult GenerateQrCode(int id)
+            {
+                var product = _context.Products.Find(id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                // สร้าง URL ปลายทางเมื่อสแกน (เช่น https://localhost:xxxx/Product/PublicDetail/5)
+                string publicUrl = Url.Action("PublicDetail", "Product", new { id = product.Id }, Request.Scheme);
+
+                // ใช้ QRCoder สร้าง QR Code
+                using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                {
+                    using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(publicUrl, QRCodeGenerator.ECCLevel.Q))
+                    {
+                        using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
+                        {
+                            byte[] qrCodeBytes = qrCode.GetGraphic(20);
+                            return File(qrCodeBytes, "image/png"); // ส่งออกเป็นไฟล์รูปภาพ PNG ทันที
+                        }
+                    }
+                }
+            }
+
+            // 2. หน้าเว็บแสดงรายละเอียดสินค้าฝั่งลูกค้า (เมื่อสแกน QR Code เข้ามา)
+            [HttpGet]
+            public async Task<IActionResult> PublicDetail(int id)
+            {
+                var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                // ==========================================
+                // บันทึก Log ทุกครั้งที่มีคนเปิดหน้าสินค้าจาก QR Code
+                // ==========================================
+                var scanLog = new ScanLog
+                {
+                    ProductId = product.Id,
+                    ScannedAt = DateTime.Now
+                };
+
+                _context.ScanLogs.Add(scanLog);
+                await _context.SaveChangesAsync();
+
+                return View(product); // ส่งไปแสดงผลที่หน้าจอ Public Mobile-friendly
+            }
         }
     }
 }

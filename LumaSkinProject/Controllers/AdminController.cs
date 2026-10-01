@@ -16,6 +16,7 @@ namespace LumaSkinProject.Controllers
         }
 
         // หน้า Admin Dashboard
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var products = await _context.Products
@@ -24,9 +25,31 @@ namespace LumaSkinProject.Controllers
                 .ToListAsync();
 
             ViewBag.TotalProducts = await _context.Products.CountAsync();
-            ViewBag.TotalScans = 1428;
 
-            // สั่งให้ชี้ไปที่โฟลเดอร์ Home/Index.cshtml ตรงๆ
+            // 1. นับยอดสแกน QR ทั้งหมดในระบบ
+            ViewBag.TotalScans = await _context.ScanLogs.CountAsync();
+
+            // 2. คำนวณหาสินค้าที่ถูกสแกนมากที่สุด
+            var topScanGroup = await _context.ScanLogs
+                .GroupBy(s => s.ProductId)
+                .Select(g => new { ProductId = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .FirstOrDefaultAsync();
+
+            if (topScanGroup != null)
+            {
+                var topProduct = await _context.Products.FindAsync(topScanGroup.ProductId);
+                ViewBag.TopProduct = topProduct != null ? $"{topProduct.Name}" : "ไม่พบข้อมูลสินค้า";
+                ViewBag.TopProductCount = $"สแกน {topScanGroup.Count} ครั้ง";
+                ViewBag.TopProductSku = topProduct != null ? $"SKU: {topProduct.Sku}" : "";
+            }
+            else
+            {
+                ViewBag.TopProduct = "ยังไม่มีการสแกน";
+                ViewBag.TopProductCount = "0 ครั้ง";
+                ViewBag.TopProductSku = "-";
+            }
+
             return View("~/Views/Home/Index.cshtml", products);
         }
 

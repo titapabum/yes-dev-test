@@ -1,0 +1,91 @@
+@model LumaSkinProject.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name + " - Luma Skin";
+    Layout = "_Layout";
+}
+
+<!-- ดึงฟอนต์ Prompt -->
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --luma-purple: #5c3d63;
+        --luma-light-purple: #f5f0f7;
+    }
+
+    body {
+        font-family: 'Prompt', sans-serif !important;
+        background-color: #f8f9fa;
+    }
+
+    .product-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(92, 61, 99, 0.06);
+        background: #ffffff;
+    }
+
+    .badge-category {
+        background-color: var(--luma-light-purple);
+        color: var(--luma-purple);
+        font-weight: 500;
+        padding: 6px 14px;
+        border-radius: 50px;
+    }
+</style>
+
+<div class="container py-4" style="max-width: 600px;">
+    <div class="text-center mb-4 pt-3">
+        <h4 class="fw-bold m-0" style="color: var(--luma-purple); letter-spacing: 2px;">LUMA SKIN</h4>
+        <small class="text-muted">Authentic Skincare Product Verification</small>
+    </div>
+
+    <div class="card product-card p-4 p-md-5 mb-4">
+        <!-- SKU และ หมวดหมู่ -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted small fw-semibold">SKU: @Model.Sku</span>
+            @if (!string.IsNullOrEmpty(Model.Category))
+            {
+                <span class="badge badge-category">@Model.Category</span>
+            }
+        </div>
+
+        <!-- ชื่อสินค้า -->
+        <h2 class="fw-bold text-dark mb-2">@Model.Name</h2>
+        
+        <!-- ขนาดและราคา -->
+        <div class="d-flex align-items-baseline mb-4">
+            <h3 class="fw-bold mb-0 me-3" style="color: var(--luma-purple);">฿@Model.Price.ToString("N2")</h3>
+            @if (!string.IsNullOrEmpty(Model.Size))
+            {
+                <span class="text-muted small">ขนาด: @Model.Size</span>
+            }
+        </div>
+
+        <hr class="text-muted opacity-25 mb-4">
+
+        <!-- รายละเอียดสินค้า -->
+        <div class="mb-4">
+            <h6 class="fw-bold text-dark mb-2"><i class="bi bi-info-circle me-2" style="color: var(--luma-purple);"></i>รายละเอียดสินค้า</h6>
+            <p class="text-secondary small line-height-base mb-0">
+                @(string.IsNullOrEmpty(Model.Description) ? "ไม่มีข้อมูลรายละเอียด" : Model.Description)
+            </p>
+        </div>
+
+        <!-- วิธีใช้ -->
+        <div class="mb-3">
+            <h6 class="fw-bold text-dark mb-2"><i class="bi bi-heart me-2" style="color: var(--luma-purple);"></i>วิธีใช้</h6>
+            <p class="text-secondary small line-height-base mb-0">
+                @(string.IsNullOrEmpty(Model.HowToUse) ? "ใช้ทาบำรุงผิวหน้าเป็นประจำ" : Model.HowToUse)
+            </p>
+        </div>
+    </div>
+
+    <div class="text-center text-muted small pb-4">
+        <p class="mb-1">© Luma Skin Official. All rights reserved.</p>
+        <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill">
+            <i class="bi bi-shield-check me-1"></i> สินค้าของแท้ปลอดภัย 100%
+        </span>
+    </div>
+</div>
