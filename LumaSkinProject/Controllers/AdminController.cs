@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using LumaSkinProject.Data;
 using LumaSkinProject.Models;
 
@@ -12,6 +13,21 @@ namespace LumaSkinProject.Controllers
         public AdminController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        // หน้า Admin Dashboard
+        public async Task<IActionResult> Index()
+        {
+            var products = await _context.Products
+                .OrderByDescending(p => p.Id)
+                .Take(10)
+                .ToListAsync();
+
+            ViewBag.TotalProducts = await _context.Products.CountAsync();
+            ViewBag.TotalScans = 1428;
+
+            // สั่งให้ชี้ไปที่โฟลเดอร์ Home/Index.cshtml ตรงๆ
+            return View("~/Views/Home/Index.cshtml", products);
         }
 
         // ==========================================
@@ -28,7 +44,7 @@ namespace LumaSkinProject.Controllers
         {
             // TODO: ตรวจสอบอีเมลและรหัสผ่านจากฐานข้อมูล (เช่น เช็ค PasswordHash)
             // ตัวอย่างจำลองเมื่อ Login สำเร็จ
-            bool isValidUser = true; 
+            bool isValidUser = true;
 
             if (!isValidUser)
             {
@@ -68,7 +84,7 @@ namespace LumaSkinProject.Controllers
             // จำลองการส่งอีเมลโดยการบันทึกลงไฟล์ Log แทนการส่งจริงตามโจทย์
             string inviteLink = Url.Action("SetPassword", "Admin", new { token = inviteToken }, Request.Scheme);
             string logContent = $"[{DateTime.Now}] Send Invite to: {email} | Role: {role} | Link: {inviteLink}\n";
-            
+
             // บันทึกลงไฟล์ log ภายในเครื่อง
             System.IO.File.AppendAllText("email_invite_log.txt", logContent);
 

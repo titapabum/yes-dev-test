@@ -1,7 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Luma Skin - Admin Dashboard";
-}
+﻿@model IEnumerable<LumaSkinProject.Models.Product>
 
+@{
+    ViewData["Title"] = "Luma Skin - Admin Dashboard";
+    Layout = "_Layout"; 
+}
 <!-- ดึงฟอนต์ Prompt จาก Google Fonts และเพิ่ม CSS Animation -->
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -181,72 +183,84 @@
                 </div>
             </div>
 
-            <!-- ตารางแสดงรายการสินค้าล่าสุด -->
-            <div class="card card-stat bg-white p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold text-dark m-0">รายการสินค้าล่าสุด</h5>
-                    <a href="#" class="small text-decoration-none fw-medium" style="color: var(--luma-purple);">ดูทั้งหมด <i class="bi bi-chevron-right small"></i></a>
-                </div>
+            <!-- ตารางแสดงรายการสินค้าจริงจากฐานข้อมูล -->
+<div class="card card-stat bg-white p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-bold text-dark m-0">รายการสินค้าล่าสุด</h5>
+        <a asp-controller="Product" asp-action="Import" class="small text-decoration-none fw-medium" style="color: var(--luma-purple);">
+            <i class="bi bi-cloud-arrow-up me-1"></i> นำเข้า CSV เพิ่ม <i class="bi bi-chevron-right small"></i>
+        </a>
+    </div>
 
-                <div class="table-responsive">
-                    <table class="table align-middle table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th class="py-3 ps-3">SKU</th>
-                                <th class="py-3">ชื่อสินค้า</th>
-                                <th class="py-3">หมวดหมู่</th>
-                                <th class="py-3">ราคา</th>
-                                <th class="py-3">สถานะ</th>
-                                <th class="py-3 text-end pe-3">จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="fw-semibold text-secondary ps-3">LS-0001</td>
-                                <td>
-                                    <div class="fw-bold text-dark">Glow & Bright Serum</div>
-                                    <small class="text-muted">30 ml</small>
-                                </td>
-                                <td><span class="badge bg-light text-dark border px-2.5 py-1">Serum</span></td>
-                                <td class="fw-medium">฿890.00</td>
-                                <td><span class="badge bg-success bg-opacity-10 text-success px-3 py-1.5 rounded-pill">Active</span></td>
-                                <td class="text-end pe-3">
-                                    <button class="btn btn-sm btn-light border-0 text-secondary me-1"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-sm btn-light border-0 text-secondary"><i class="bi bi-qr-code"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="fw-semibold text-secondary ps-3">LS-0002</td>
-                                <td>
-                                    <div class="fw-bold text-dark">Gentle Hydrating Cleanser</div>
-                                    <small class="text-muted">150 ml</small>
-                                </td>
-                                <td><span class="badge bg-light text-dark border px-2.5 py-1">Cleanser</span></td>
-                                <td class="fw-medium">฿550.00</td>
-                                <td><span class="badge bg-success bg-opacity-10 text-success px-3 py-1.5 rounded-pill">Active</span></td>
-                                <td class="text-end pe-3">
-                                    <button class="btn btn-sm btn-light border-0 text-secondary me-1"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-sm btn-light border-0 text-secondary"><i class="bi bi-qr-code"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="fw-semibold text-secondary ps-3">LS-0003</td>
-                                <td>
-                                    <div class="fw-bold text-dark">Daily Soothing Toner</div>
-                                    <small class="text-muted">200 ml</small>
-                                </td>
-                                <td><span class="badge bg-light text-dark border px-2.5 py-1">Toner</span></td>
-                                <td class="fw-medium">฿620.00</td>
-                                <td><span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-1.5 rounded-pill">Inactive</span></td>
-                                <td class="text-end pe-3">
-                                    <button class="btn btn-sm btn-light border-0 text-secondary me-1"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-sm btn-light border-0 text-secondary"><i class="bi bi-qr-code"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <div class="table-responsive">
+        <table class="table align-middle table-hover mb-0">
+            <thead>
+                <tr>
+                    <th class="py-3 ps-3">SKU</th>
+                    <th class="py-3">ชื่อสินค้า</th>
+                    <th class="py-3">หมวดหมู่</th>
+                    <th class="py-3">ราคา</th>
+                    <th class="py-3">สถานะ</th>
+                    <th class="py-3 text-end pe-3">จัดการ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            ยังไม่มีข้อมูลสินค้าในระบบ กรุณานำเข้าไฟล์ CSV
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold text-secondary ps-3">@item.Sku</td>
+                            <td>
+                                <div class="fw-bold text-dark">@item.Name</div>
+                                <small class="text-muted">@(string.IsNullOrEmpty(item.Size) ? "-" : item.Size)</small>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.Category))
+                                {
+                                    <span class="badge bg-light text-dark border px-2.5 py-1">@item.Category</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">-</span>
+                                }
+                            </td>
+                            <td class="fw-medium">฿@item.Price.ToString("N2")</td>
+                            <td>
+                                @if (item.Status?.ToLower() == "inactive")
+                                {
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-1.5 rounded-pill">Inactive</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success bg-opacity-10 text-success px-3 py-1.5 rounded-pill">Active</span>
+                                }
+                            </td>
+                            <td class="text-end pe-3">
+                                <!-- ปุ่มแก้ไข (เดี๋ยวเราทำหน้า Edit ต่อไป) -->
+                                <a href="#" class="btn btn-sm btn-light border-0 text-secondary me-1" title="แก้ไขข้อมูล">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <!-- ปุ่มดู/สร้าง QR Code -->
+                                <a href="#" class="btn btn-sm btn-light border-0 text-secondary" title="QR Code">
+                                    <i class="bi bi-qr-code"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
         </main>
     </div>

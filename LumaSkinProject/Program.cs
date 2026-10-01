@@ -16,8 +16,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var dbContext = services.GetRequiredService<ApplicationDbContext>();
-    
-    dbContext.Database.EnsureDeleted(); // ลบฐานข้อมูลเก่าที่อาจจะเสียหายหรือไม่มีตารางทิ้ง
+
     dbContext.Database.EnsureCreated(); // สร้างไฟล์ Database ใหม่พร้อมตาราง Products, Users, ScanLogs ให้ทันที
 }
 // Configure the HTTP request pipeline.
