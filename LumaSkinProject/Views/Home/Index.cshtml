@@ -1,187 +1,246 @@
 ﻿@{
     ViewData["Title"] = "Luma Skin - Admin Dashboard";
-    Layout = "_Layout"; // หรือปรับเป็น Layout เปล่าตามต้องการ
 }
 
-<!-- Custom Style สำหรับโทนสีม่วงแบรนด์ Luma Skin -->
+<!-- ดึงฟอนต์ Prompt จาก Google Fonts และเพิ่ม CSS Animation -->
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
     :root {
         --luma-purple: #5c3d63;
-        --luma-light-purple: #f3eff5;
+        --luma-light-purple: #f5f0f7;
         --luma-lavender: #dcd6f7;
-    }
-    
-    body {
-        background-color: #f8f9fa;
+        --luma-dark: #2c2230;
     }
 
+    /* ใช้ฟอนต์ Prompt ทั้งหน้า */
+    body, h1, h2, h3, h4, h5, h6, .table, button, input {
+        font-family: 'Prompt', sans-serif !important;
+    }
+
+    /* ปรับ Layout ให้เต็มจอและลบขอบส่วนเกินของ Layout เดิม */
+    .container-fluid {
+        width: 100%;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        overflow-x: hidden;
+    }
+
+    /* Sidebar สไตล์มินิมอลเต็มความสูง */
     .sidebar {
         background-color: #ffffff;
-        border-right: 1px solid #eaeaea;
-        min-height: 85vh;
+        border-right: 1px solid #edf0f2;
+        min-height: calc(100vh - 56px);
+        box-shadow: 4px 0 20px rgba(0,0,0,0.01);
     }
 
     .nav-link {
-        color: #6c757d;
-        font-weight: 500;
-        border-radius: 8px;
-        margin-bottom: 4px;
-        transition: all 0.2s;
+        color: #718096;
+        font-weight: 400;
+        border-radius: 10px;
+        margin-bottom: 6px;
+        transition: all 0.25s ease;
     }
 
     .nav-link:hover, .nav-link.active {
         background-color: var(--luma-light-purple);
         color: var(--luma-purple);
+        transform: translateX(4px);
     }
 
+    /* ปุ่มโทนสีแบรนด์ */
     .btn-luma {
         background-color: var(--luma-purple);
         color: #ffffff;
-        border-radius: 8px;
+        border-radius: 10px;
+        transition: all 0.2s ease;
     }
 
     .btn-luma:hover {
         background-color: #4a304f;
         color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(92, 61, 99, 0.2);
     }
 
+    /* การ์ดสถิติ พร้อม Animation ยกตัวขึ้นเมื่อเอาเมาส์ชี้ */
     .card-stat {
-        border: none;
-        border-radius: 12px;
-        box-shadow: 0 2px 12px rgba(92, 61, 99, 0.05);
+        border: 1px solid rgba(0,0,0,0.04);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(92, 61, 99, 0.03);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        background: #ffffff;
+    }
+
+    .card-stat:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(92, 61, 99, 0.08);
+    }
+
+    /* Animation สำหรับการแสดงผลหน้าเว็บ (Fade In & Slide Up) */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-enter {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+    /* ปรับแต่งตารางให้ดูสะอาดตา */
+    .table thead th {
+        background-color: #fafbfc;
+        color: #4a5568;
+        font-weight: 500;
+        border-bottom: 1px solid #edf2f7;
+    }
+
+    .table tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(245, 240, 247, 0.4);
     }
 </style>
 
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar ด้านข้าง -->
-        <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-3">
-            <div class="text-center py-3 mb-3 border-bottom">
-                <h5 class="fw-bold m-0" style="color: var(--luma-purple); letter-spacing: 1px;">LUMA SKIN</h5>
-                <small class="text-muted">Admin Panel</small>
+<div class="container-fluid animate-enter">
+    <div class="row g-0">
+        
+        <!-- Sidebar ด้านข้าง (เต็มความสูง) -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar p-4">
+            <div class="text-center py-3 mb-4 border-bottom">
+                <h4 class="fw-bold m-0" style="color: var(--luma-purple); letter-spacing: 1.5px;">LUMA SKIN</h4>
+                <small class="text-muted" style="font-size: 0.8rem;">Admin Control Center</small>
             </div>
             
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active py-2 px-3" href="#"><i class="bi bi-grid me-2"></i> ภาพรวมระบบ</a>
+                    <a class="nav-link active py-2.5 px-3 mb-1" href="#"><i class="bi bi-grid me-2"></i> ภาพรวมระบบ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-2 px-3" href="#"><i class="bi bi-box-seam me-2"></i> จัดการสินค้า</a>
+                    <a class="nav-link py-2.5 px-3 mb-1" href="#"><i class="bi bi-box-seam me-2"></i> จัดการสินค้า</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-2 px-3" href="#"><i class="bi bi-file-earmark-arrow-up me-2"></i> นำเข้าไฟล์ CSV</a>
+                    <a class="nav-link py-2.5 px-3 mb-1" href="/Product/Import"><i class="bi bi-file-earmark-arrow-up me-2"></i> นำเข้าไฟล์ CSV</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-2 px-3" href="#"><i class="bi bi-qr-code me-2"></i> สร้าง & ปรับแต่ง QR</a>
+                    <a class="nav-link py-2.5 px-3 mb-1" href="#"><i class="bi bi-qr-code me-2"></i> สร้าง & ปรับแต่ง QR</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-2 px-3" href="#"><i class="bi bi-bar-chart me-2"></i> บันทึกการสแกน</a>
+                    <a class="nav-link py-2.5 px-3 mb-1" href="#"><i class="bi bi-bar-chart me-2"></i> บันทึกการสแกน</a>
                 </li>
-                <li class="nav-item mt-4">
-                    <a class="nav-link py-2 px-3 text-danger" href="#"><i class="bi bi-box-arrow-right me-2"></i> ออกจากระบบ</a>
+                <li class="nav-item mt-5 pt-3 border-top">
+                    <a class="nav-link py-2.5 px-3 text-danger hover-danger" href="#"><i class="bi bi-box-arrow-right me-2"></i> ออกจากระบบ</a>
                 </li>
             </ul>
         </nav>
 
-        <!-- Main Content ส่วนเนื้อหาหลัก -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+        <!-- Main Content (เนื้อหาเต็มจอฝั่งขวา) -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-5 py-4 bg-light" style="min-height: calc(100vh - 56px);">
             
             <!-- Header หัวข้อหน้า -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
                 <div>
-                    <h2 class="fw-bold text-dark mb-1">ภาพรวมระบบ (Dashboard)</h2>
+                    <h2 class="fw-bold text-dark mb-1" style="font-size: 1.75rem;">ภาพรวมระบบ (Dashboard)</h2>
                     <p class="text-muted small mb-0">ยินดีต้อนรับกลับมา, ผู้ดูแลระบบ Luma Skin</p>
                 </div>
                 <div>
-                    <button class="btn btn-luma px-3 py-2"><i class="bi bi-plus-lg me-1"></i> เพิ่มสินค้าใหม่</button>
+                    <button class="btn btn-luma px-4 py-2.5 shadow-sm fw-medium"><i class="bi bi-plus-lg me-2"></i> เพิ่มสินค้าใหม่</button>
                 </div>
             </div>
 
-            <!-- Card สถิติย่อ -->
-            <div class="row g-3 mb-4">
+            <!-- Card สถิติย่อ 3 ช่อง -->
+            <div class="row g-4 mb-4">
                 <div class="col-md-4">
-                    <div class="card card-stat p-3 bg-white">
-                        <span class="text-muted small">สินค้าทั้งหมดในระบบ</span>
-                        <h3 class="fw-bold mt-1" style="color: var(--luma-purple);">24 รายการ</h3>
-                        <span class="text-success small"><i class="bi bi-arrow-up"></i> อัปเดตล่าสุดวันนี้</span>
+                    <div class="card card-stat p-4">
+                        <span class="text-muted small fw-medium">สินค้าทั้งหมดในระบบ</span>
+                        <h2 class="fw-bold mt-2 mb-1" style="color: var(--luma-purple);">24 <span class="fs-6 fw-normal text-muted">รายการ</span></h2>
+                        <span class="text-success small fw-medium"><i class="bi bi-arrow-up-right me-1"></i> อัปเดตล่าสุดวันนี้</span>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card card-stat p-3 bg-white">
-                        <span class="text-muted small">ยอดการสแกน QR ทั้งหมด</span>
-                        <h3 class="fw-bold mt-1" style="color: var(--luma-purple);">1,428 ครั้ง</h3>
-                        <span class="text-success small"><i class="bi bi-graph-up-arrow"></i> +12% จากสัปดาห์ก่อน</span>
+                    <div class="card card-stat p-4">
+                        <span class="text-muted small fw-medium">ยอดการสแกน QR ทั้งหมด</span>
+                        <h2 class="fw-bold mt-2 mb-1" style="color: var(--luma-purple);">1,428 <span class="fs-6 fw-normal text-muted">ครั้ง</span></h2>
+                        <span class="text-success small fw-medium"><i class="bi bi-graph-up-arrow me-1"></i> +12% จากสัปดาห์ก่อน</span>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card card-stat p-3 bg-white">
-                        <span class="text-muted small">สินค้ายอดฮิตสูงสุด</span>
-                        <h6 class="fw-bold mt-2 text-dark text-truncate">Glow & Bright Serum (LS-0001)</h6>
-                        <span class="text-muted small">ถูกสแกน 420 ครั้ง</span>
+                    <div class="card card-stat p-4">
+                        <span class="text-muted small fw-medium">สินค้ายอดฮิตสูงสุด</span>
+                        <h6 class="fw-bold mt-2 mb-1 text-dark text-truncate">Glow & Bright Serum</h6>
+                        <span class="text-muted small">SKU: LS-0001 (สแกน 420 ครั้ง)</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ตารางแสดงรายการสินค้าตัวอย่าง (Mock Data) -->
+            <!-- ตารางแสดงรายการสินค้าล่าสุด -->
             <div class="card card-stat bg-white p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="fw-bold text-dark m-0">รายการสินค้าล่าสุด</h5>
-                    <a href="#" class="small text-decoration-none" style="color: var(--luma-purple);">ดูทั้งหมด</a>
+                    <a href="#" class="small text-decoration-none fw-medium" style="color: var(--luma-purple);">ดูทั้งหมด <i class="bi bi-chevron-right small"></i></a>
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table align-middle table-hover">
-                        <thead class="table-light">
+                    <table class="table align-middle table-hover mb-0">
+                        <thead>
                             <tr>
-                                <th class="py-3">SKU</th>
+                                <th class="py-3 ps-3">SKU</th>
                                 <th class="py-3">ชื่อสินค้า</th>
                                 <th class="py-3">หมวดหมู่</th>
                                 <th class="py-3">ราคา</th>
                                 <th class="py-3">สถานะ</th>
-                                <th class="py-3 text-end">จัดการ</th>
+                                <th class="py-3 text-end pe-3">จัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="fw-semibold text-secondary">LS-0001</td>
+                                <td class="fw-semibold text-secondary ps-3">LS-0001</td>
                                 <td>
                                     <div class="fw-bold text-dark">Glow & Bright Serum</div>
                                     <small class="text-muted">30 ml</small>
                                 </td>
-                                <td><span class="badge bg-light text-dark border">Serum</span></td>
-                                <td>฿890.00</td>
-                                <td><span class="badge bg-success bg-opacity-10 text-success px-2 py-1">Active</span></td>
-                                <td class="text-end">
-                                    <button class="btn btn-sm btn-outline-secondary border-0"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-sm btn-outline-secondary border-0"><i class="bi bi-qr-code"></i></button>
+                                <td><span class="badge bg-light text-dark border px-2.5 py-1">Serum</span></td>
+                                <td class="fw-medium">฿890.00</td>
+                                <td><span class="badge bg-success bg-opacity-10 text-success px-3 py-1.5 rounded-pill">Active</span></td>
+                                <td class="text-end pe-3">
+                                    <button class="btn btn-sm btn-light border-0 text-secondary me-1"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-light border-0 text-secondary"><i class="bi bi-qr-code"></i></button>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="fw-semibold text-secondary">LS-0002</td>
+                                <td class="fw-semibold text-secondary ps-3">LS-0002</td>
                                 <td>
                                     <div class="fw-bold text-dark">Gentle Hydrating Cleanser</div>
                                     <small class="text-muted">150 ml</small>
                                 </td>
-                                <td><span class="badge bg-light text-dark border">Cleanser</span></td>
-                                <td>฿550.00</td>
-                                <td><span class="badge bg-success bg-opacity-10 text-success px-2 py-1">Active</span></td>
-                                <td class="text-end">
-                                    <button class="btn btn-sm btn-outline-secondary border-0"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-sm btn-outline-secondary border-0"><i class="bi bi-qr-code"></i></button>
+                                <td><span class="badge bg-light text-dark border px-2.5 py-1">Cleanser</span></td>
+                                <td class="fw-medium">฿550.00</td>
+                                <td><span class="badge bg-success bg-opacity-10 text-success px-3 py-1.5 rounded-pill">Active</span></td>
+                                <td class="text-end pe-3">
+                                    <button class="btn btn-sm btn-light border-0 text-secondary me-1"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-light border-0 text-secondary"><i class="bi bi-qr-code"></i></button>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="fw-semibold text-secondary">LS-0003</td>
+                                <td class="fw-semibold text-secondary ps-3">LS-0003</td>
                                 <td>
                                     <div class="fw-bold text-dark">Daily Soothing Toner</div>
                                     <small class="text-muted">200 ml</small>
                                 </td>
-                                <td><span class="badge bg-light text-dark border">Toner</span></td>
-                                <td>฿620.00</td>
-                                <td><span class="badge bg-secondary bg-opacity-10 text-secondary px-2 py-1">Inactive</span></td>
-                                <td class="text-end">
-                                    <button class="btn btn-sm btn-outline-secondary border-0"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-sm btn-outline-secondary border-0"><i class="bi bi-qr-code"></i></button>
+                                <td><span class="badge bg-light text-dark border px-2.5 py-1">Toner</span></td>
+                                <td class="fw-medium">฿620.00</td>
+                                <td><span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-1.5 rounded-pill">Inactive</span></td>
+                                <td class="text-end pe-3">
+                                    <button class="btn btn-sm btn-light border-0 text-secondary me-1"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-light border-0 text-secondary"><i class="bi bi-qr-code"></i></button>
                                 </td>
                             </tr>
                         </tbody>

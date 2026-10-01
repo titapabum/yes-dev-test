@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LumaSkinProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f00d9982291653cc432def1df4eeba7d317a75cd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+922e1ad4b2ab1b19bf6c3936c3dd9fbc8ba5b10c")]
 [assembly: System.Reflection.AssemblyProductAttribute("LumaSkinProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LumaSkinProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
