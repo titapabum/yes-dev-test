@@ -1,0 +1,12 @@
+<div class="container mt-4">
+    <h2>นำเข้าข้อมูลสินค้าด้วยไฟล์ CSV</h2>
+    
+    <!-- ฟอร์มสำหรับอัปโหลดไฟล์ ส่งไปที่ ProductController เมธอด ImportCsv -->
+    <form asp-controller="Product" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="csvFile" class="form-label">เลือกไฟล์ CSV สินค้า</label>
+            <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv" required />
+        </div>
+        <button type="submit" class="btn btn-primary">อัปโหลดและตรวจสอบข้อมูล</button>
+    </form>
+</div>
